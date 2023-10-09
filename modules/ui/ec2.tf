@@ -7,7 +7,7 @@ resource "aws_security_group" "fargate_security_group" {
     from_port       = 0
     to_port         = 0
     protocol        = -1
-    security_groups = [aws_security_group.ui_lb_security_group.id]
+    security_groups =  var.certificate_arn ? [aws_security_group.ui_lb_security_group[0].id] : [aws_security_group.ui_lb_security_group_http[0].id]
   }
 
   ingress {
