@@ -46,7 +46,7 @@ module "metaflow-metadata-service" {
 
 module "metaflow-ui" {
   source = "./modules/ui"
-  count  = var.ui_certificate_arn == "" ? 0 : 1
+  count  = 1
 
   resource_prefix = local.resource_prefix
   resource_suffix = local.resource_suffix
