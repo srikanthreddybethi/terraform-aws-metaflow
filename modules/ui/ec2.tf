@@ -36,7 +36,7 @@ resource "aws_security_group" "fargate_security_group" {
 }
 
 resource "aws_security_group" "ui_lb_security_group" {
-  count         = var.certificate_arn == "" ? 1 : 0
+  count         = var.certificate_arn == "" ? 0 : 1
   name        = local.alb_security_group_name
   description = "Security Group for ALB"
   vpc_id      = var.metaflow_vpc_id
@@ -75,7 +75,7 @@ resource "aws_security_group" "ui_lb_security_group" {
 }
 
 resource "aws_security_group" "ui_lb_security_group_http" {
-  count         = var.certificate_arn == "" ? 0 : 1
+  count         = var.certificate_arn == "" ? 1 : 0
   name        = local.alb_security_group_name
   description = "Security Group for ALB"
   vpc_id      = var.metaflow_vpc_id
@@ -118,10 +118,9 @@ resource "aws_lb" "this" {
   internal           = var.alb_internal
   load_balancer_type = "application"
   subnets            = [var.subnet1_id, var.subnet2_id]
-  security_groups = var.certificate_arn == "" ? [
-    aws_security_group.ui_lb_security_group[0].id,
-    aws_security_group.ui_lb_security_group_http[0].id
-  ] : [aws_security_group.ui_lb_security_group[0].id]
+  security_groups = [
+    var.certificate_arn == "" ? aws_security_group.ui_lb_security_group_http[0].id : aws_security_group.ui_lb_security_group[0].id
+  ]
 
   tags = var.standard_tags
 }
@@ -155,7 +154,7 @@ resource "aws_lb_target_group" "ui_static" {
 }
 
 resource "aws_lb_listener" "this" {
-  count         = var.certificate_arn == "" ? 1 : 0
+  count         = var.certificate_arn == "" ? 0 : 1
   load_balancer_arn = aws_lb.this.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -170,7 +169,7 @@ resource "aws_lb_listener" "this" {
 }
 
 resource "aws_lb_listener" "this_http" {
-  count         = var.certificate_arn == "" ? 0 : 1
+  count         = var.certificate_arn == "" ? 1 : 0
   load_balancer_arn = aws_lb.this.arn
   port              = "80"
   protocol          = "HTTP"
