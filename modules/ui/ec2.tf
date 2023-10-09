@@ -118,9 +118,9 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
   subnets            = [var.subnet1_id, var.subnet2_id]
   security_groups = var.certificate_arn ? [
-    aws_security_group.ui_lb_security_group.id,
-    aws_security_group.ui_lb_security_group_http.id
-  ] : [aws_security_group.ui_lb_security_group.id]
+    aws_security_group.ui_lb_security_group[0].id,
+    aws_security_group.ui_lb_security_group_http[0].id
+  ] : [aws_security_group.ui_lb_security_group[0].id]
 
   tags = var.standard_tags
 }
@@ -182,7 +182,7 @@ resource "aws_lb_listener" "this_http" {
 }
 
 resource "aws_lb_listener_rule" "ui_backend" {
-  listener_arn = var.certificate_arn ? aws_lb_listener.this.arn : aws_lb_listener.this_http.arn
+  listener_arn = var.certificate_arn ? aws_lb_listener.this[0].arn : aws_lb_listener.this_http[0].arn
   priority     = 1
 
   action {
