@@ -36,6 +36,7 @@ resource "aws_security_group" "fargate_security_group" {
 }
 
 resource "aws_security_group" "ui_lb_security_group" {
+  count         = var.certificate_arn ? 1 : 0
   name        = local.alb_security_group_name
   description = "Security Group for ALB"
   vpc_id      = var.metaflow_vpc_id
@@ -74,7 +75,7 @@ resource "aws_security_group" "ui_lb_security_group" {
 }
 
 resource "aws_security_group" "ui_lb_security_group_http" {
-  count         = var.certificate_arn ? 1 : 0
+  count         = var.certificate_arn ? 0 : 1
   name        = local.alb_security_group_name
   description = "Security Group for ALB"
   vpc_id      = var.metaflow_vpc_id
@@ -84,7 +85,7 @@ resource "aws_security_group" "ui_lb_security_group_http" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = var.ui_allow_list
-    description = "Allow public HTTPS"
+    description = "Allow public HTTP"
   }
 
   ingress {
