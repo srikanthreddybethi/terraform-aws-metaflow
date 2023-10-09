@@ -7,7 +7,7 @@ resource "aws_security_group" "fargate_security_group" {
     from_port       = 0
     to_port         = 0
     protocol        = -1
-    security_groups =  var.certificate_arn ? [aws_security_group.ui_lb_security_group[0].id] : [aws_security_group.ui_lb_security_group_http[0].id]
+    security_groups =  var.certificate_arn == "" ? [aws_security_group.ui_lb_security_group[0].id] : [aws_security_group.ui_lb_security_group_http[0].id]
   }
 
   ingress {
@@ -36,7 +36,7 @@ resource "aws_security_group" "fargate_security_group" {
 }
 
 resource "aws_security_group" "ui_lb_security_group" {
-  count         = var.certificate_arn ? 1 : 0
+  count         = var.certificate_arn == "" ? 1 : 0
   name        = local.alb_security_group_name
   description = "Security Group for ALB"
   vpc_id      = var.metaflow_vpc_id
@@ -75,7 +75,7 @@ resource "aws_security_group" "ui_lb_security_group" {
 }
 
 resource "aws_security_group" "ui_lb_security_group_http" {
-  count         = var.certificate_arn ? 0 : 1
+  count         = var.certificate_arn == "" ? 0 : 1
   name        = local.alb_security_group_name
   description = "Security Group for ALB"
   vpc_id      = var.metaflow_vpc_id
@@ -118,7 +118,7 @@ resource "aws_lb" "this" {
   internal           = var.alb_internal
   load_balancer_type = "application"
   subnets            = [var.subnet1_id, var.subnet2_id]
-  security_groups = var.certificate_arn ? [
+  security_groups = var.certificate_arn == "" ? [
     aws_security_group.ui_lb_security_group[0].id,
     aws_security_group.ui_lb_security_group_http[0].id
   ] : [aws_security_group.ui_lb_security_group[0].id]
@@ -155,12 +155,12 @@ resource "aws_lb_target_group" "ui_static" {
 }
 
 resource "aws_lb_listener" "this" {
-  count         = var.certificate_arn ? 1 : 0
+  count         = var.certificate_arn == "" ? 1 : 0
   load_balancer_arn = aws_lb.this.arn
   port              = "443"
   protocol          = "HTTPS"
 
-  certificate_arn = var.certificate_arn
+  certificate_arn = var.certificate_arn == ""
 
   default_action {
     type             = "forward"
@@ -170,7 +170,7 @@ resource "aws_lb_listener" "this" {
 }
 
 resource "aws_lb_listener" "this_http" {
-  count         = var.certificate_arn ? 0 : 1
+  count         = var.certificate_arn == "" ? 0 : 1
   load_balancer_arn = aws_lb.this.arn
   port              = "80"
   protocol          = "HTTP"
@@ -183,7 +183,7 @@ resource "aws_lb_listener" "this_http" {
 }
 
 resource "aws_lb_listener_rule" "ui_backend" {
-  listener_arn = var.certificate_arn ? aws_lb_listener.this[0].arn : aws_lb_listener.this_http[0].arn
+  listener_arn = var.certificate_arn == "" ? aws_lb_listener.this[0].arn : aws_lb_listener.this_http[0].arn
   priority     = 1
 
   action {
