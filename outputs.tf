@@ -18,6 +18,11 @@ output "METAFLOW_ECS_S3_ACCESS_IAM_ROLE" {
   description = "Role for AWS Batch to Access Amazon S3"
 }
 
+output "METAFLOW_ECS_S3_ACCESS_IAM_ROLE_NAME" {
+  value       = aws_iam_role.batch_s3_task_role.name
+  description = "Role name for AWS Batch to Access Amazon S3"
+}
+
 output "METAFLOW_EVENTS_SFN_ACCESS_IAM_ROLE" {
   value       = module.metaflow-step-functions.metaflow_eventbridge_role_arn
   description = "IAM role for Amazon EventBridge to access AWS Step Functions."
