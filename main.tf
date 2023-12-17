@@ -107,7 +107,7 @@ module "metaflow-step-functions" {
   resource_suffix = local.resource_suffix
 
   active              = var.enable_step_functions
-  batch_job_queue_arn = module.metaflow-computation.METAFLOW_BATCH_JOB_QUEUE
+  batch_job_queue_arns = [module.metaflow-computation.METAFLOW_BATCH_JOB_QUEUE]
   iam_partition       = var.iam_partition
   s3_bucket_arn       = module.metaflow-datastore.s3_bucket_arn
   s3_bucket_kms_arn   = module.metaflow-datastore.datastore_s3_bucket_kms_key_arn

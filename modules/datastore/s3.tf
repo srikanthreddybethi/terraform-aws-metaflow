@@ -27,3 +27,29 @@ resource "aws_s3_bucket_public_access_block" "this" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+
+resource "aws_s3_bucket_lifecycle_configuration" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  rule {
+    id = "transition"
+    status = "Enabled"
+    transition {
+      days          = 30
+      storage_class = "INTELLIGENT_TIERING"
+    }
+    transition {
+      days          = 60
+      storage_class = "GLACIER"
+    }
+  }
+  rule {
+    id = "expiration"
+    expiration {
+      days = 180
+    }
+    status = "Enabled"
+  }
+
+}

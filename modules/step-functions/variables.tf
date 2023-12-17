@@ -4,9 +4,9 @@ variable "active" {
   type        = bool
 }
 
-variable "batch_job_queue_arn" {
-  type        = string
-  description = "Batch job queue arn"
+variable "batch_job_queue_arns" {
+  type        = list[string]
+  description = "Batch job queue arns"
 }
 
 variable "iam_partition" {

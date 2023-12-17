@@ -12,7 +12,7 @@ To read more, see [the Metaflow docs](https://docs.metaflow.org/metaflow-on-aws/
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_batch_type"></a> [batch\_type](#input\_batch\_type) | AWS Batch Compute Type ('ec2', 'fargate') | `string` | `"ec2"` | no |
+| <a name="input_batch_type"></a> [batch\_type](#input\_batch\_type) | AWS Batch Compute Type ('ec2', 'ec2\_spot', 'fargate', 'fargate\_spot') | `string` | `"ec2"` | no |
 | <a name="input_compute_environment_additional_security_group_ids"></a> [compute\_environment\_additional\_security\_group\_ids](#input\_compute\_environment\_additional\_security\_group\_ids) | Additional security group ids to apply to the Batch Compute environment | `list(string)` | `[]` | no |
 | <a name="input_compute_environment_allocation_strategy"></a> [compute\_environment\_allocation\_strategy](#input\_compute\_environment\_allocation\_strategy) | Allocation strategy for Batch Compute environment (BEST\_FIT, BEST\_FIT\_PROGRESSIVE, SPOT\_CAPACITY\_OPTIMIZED) | `string` | `"BEST_FIT"` | no |
 | <a name="input_compute_environment_desired_vcpus"></a> [compute\_environment\_desired\_vcpus](#input\_compute\_environment\_desired\_vcpus) | Desired Starting VCPUs for Batch Compute Environment [0-16] for EC2 Batch Compute Environment (ignored for Fargate) | `number` | n/a | yes |

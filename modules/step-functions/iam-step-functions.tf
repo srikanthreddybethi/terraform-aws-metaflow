@@ -36,10 +36,12 @@ data "aws_iam_policy_document" "step_functions_batch_policy" {
       "batch:SubmitJob"
     ]
 
-    resources = [
-      var.batch_job_queue_arn,
-      "arn:${var.iam_partition}:batch:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:job-definition/*"
-    ]
+    resources = concat(
+      var.batch_job_queue_arns,
+      [
+        "arn:${var.iam_partition}:batch:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:job-definition/*"
+      ]
+    )
   }
 }
 
