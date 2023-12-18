@@ -5,7 +5,7 @@ variable "active" {
 }
 
 variable "batch_job_queue_arns" {
-  type        = list[string]
+  type        = list(string)
   description = "Batch job queue arns"
 }
 
